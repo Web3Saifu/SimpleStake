@@ -75,7 +75,25 @@ Suggested commit message, not executed: `docs: establish SimpleStake scope, phas
 - `forge test --root contracts`: 1 passed, 0 failed, 0 skipped. `forge fmt --root contracts --check`: passed. Forge reported a nonfatal warning while writing its signature cache outside the workspace.
 - `git rev-parse --show-toplevel` reported `E:/FY2/Staking`. `git check-ignore` matched sample output, cache, broadcast, and local environment paths.
 - Learning exercise: run `git submodule status` and `forge test --root contracts`, then trace the OpenZeppelin import in Setup.t.sol through the remapping in foundry.toml.
-- Learning review and owner acceptance are pending. Suggested commit message: `build: initialize Foundry and pin contract dependencies`.
+- The owner explicitly accepted Phase 03 with `ACCEPT PHASE 03` on 2026-11-24. Learning responses remain pending.
+
+## Phase 04: per-address Solidity counter
+
+- The owner approved the Phase 04 plan. Added a test-only counter and tests. Solidity's `mapping(address => uint256)` defaults to zero for each address. The public mapping generates a getter and `increment()` writes to the caller's entry using `msg.sender`.
+- Ran `forge test --root contracts --match-test test_RepeatedIncrementsPersistForCaller` against the stub. It failed as expected with `0 != 1`. Added the storage write and built successfully with `forge build --root contracts` using Solidity 0.8.39.
+- `forge test --root contracts` passed all four tests across two suites. The three new cases cover zero defaults, repeated increments, and caller isolation. `forge fmt --root contracts --check` passed. Forge reported a nonfatal warning about writing its signature cache outside the workspace.
+- The tests use `vm.prank` to simulate callers. A wallet would submit a transaction to persist an increment on-chain, and a client can use a read call to fetch a count. The counter is exercised locally by Forge.
+- The exercise in README asks the owner to add a third caller and predict the counts. The owner explicitly accepted Phase 04 on 2026-11-24. Learning responses remain pending.
+- Suggested commit message: `test: demonstrate caller-specific Solidity storage`.
+
+## Phase 05: ERC-20 test token
+
+- The owner approved the Phase 05 plan. Added `MockERC20.sol`, which inherits OpenZeppelin ERC20 and Ownable, takes an explicit initial owner, and starts at zero supply. The owner's `mint(to, amount)` call delegates the balance and supply updates to OpenZeppelin.
+- The targeted mint test first failed against the stub because Alice's balance was zero instead of 10 STK. Implemented the mint call and ran `forge build --root contracts` with Solidity 0.8.39.
+- `forge test --root contracts` passed all 11 tests across three suites, including seven new token tests. They cover metadata, initial supply, independent token instances, owner minting, unauthorized minting, direct transfers, and delegated spending within and above allowance.
+- `forge fmt --root contracts --check` and `forge lint --root contracts` passed. The expected-revert transfer test uses a local lint exception for its unused success value. Forge reported a nonfatal warning about writing its signature cache outside the workspace.
+- The README exercise traces how a delegated transfer moves balances and consumes allowance while preserving total supply. On-chain deployment is a Phase 06 milestone. Learning responses and phase acceptance are pending.
+- Suggested commit message: `feat: add owner-mintable ERC-20 test token`.
 
 ## Future entry format
 

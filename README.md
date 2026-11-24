@@ -6,7 +6,7 @@ The planned application lets users connect MetaMask, approve and stake STK, with
 
 ## Current state
 
-The local Git repository and Foundry setup are verified. Phase 03 is awaiting owner acceptance. Phase 04 introduces the first Solidity learning contract.
+The owner accepted Phase 04. The Phase 05 ERC-20 test token is implemented and verified in Foundry. Phase 05 awaits owner acceptance.
 
 This project is educational, not production-ready or independently audited. Mainnet deployment is excluded.
 
@@ -72,6 +72,30 @@ forge fmt --root contracts --check
 ```
 
 In a fresh checkout after the submodule pins are committed, run `git submodule update --init` first. Forge downloads the pinned compiler when it is missing. Build output, caches, and local `.env` files are excluded by the root `.gitignore`.
+
+## Phase 04 exercise
+
+[LearningCounter.sol](contracts/test/helpers/LearningCounter.sol) stores one count per address. `increment()` increases the caller's count, and the public mapping gives Solidity a `counts(address)` getter. The example lives under `contracts/test/` for local exercises.
+
+Run the caller isolation test from the repository root:
+
+```powershell
+forge test --root contracts --match-test test_CallerCountsStaySeparate -vvvv
+```
+
+In [LearningCounter.t.sol](contracts/test/LearningCounter.t.sol), add a third caller to the isolation test. Predict all three counts before running it again. Each `vm.prank(address)` sets `msg.sender` for the next call.
+
+## Phase 05 test token
+
+[MockERC20.sol](contracts/src/MockERC20.sol) takes a name, symbol, and initial owner. Each instance starts with zero supply and uses OpenZeppelin's 18 decimals, transfers, and allowances. The owner can call `mint(to, amount)` to increase the recipient's balance and total supply. Phase 06 will use this constructor to deploy STK and RWD separately on Anvil.
+
+Run the delegated transfer exercise from the repository root:
+
+```powershell
+forge test --root contracts --match-test test_TransferFromUsesAllowanceAndMovesBalance -vvvv
+```
+
+In [MockERC20.t.sol](contracts/test/MockERC20.t.sol), trace Alice's approval and the spender's transfer. Alice starts with 10 STK and approves 4 STK. Predict Alice's balance, Bob's balance, and the remaining allowance after the spender transfers 3 STK to Bob. In these tests, `1 ether` is Solidity shorthand for `10**18` base units, used here to represent one 18-decimal token.
 
 ## Read the current documents
 
