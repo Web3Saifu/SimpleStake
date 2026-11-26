@@ -92,8 +92,47 @@ Suggested commit message, not executed: `docs: establish SimpleStake scope, phas
 - The targeted mint test first failed against the stub because Alice's balance was zero instead of 10 STK. Implemented the mint call and ran `forge build --root contracts` with Solidity 0.8.39.
 - `forge test --root contracts` passed all 11 tests across three suites, including seven new token tests. They cover metadata, initial supply, independent token instances, owner minting, unauthorized minting, direct transfers, and delegated spending within and above allowance.
 - `forge fmt --root contracts --check` and `forge lint --root contracts` passed. The expected-revert transfer test uses a local lint exception for its unused success value. Forge reported a nonfatal warning about writing its signature cache outside the workspace.
-- The README exercise traces how a delegated transfer moves balances and consumes allowance while preserving total supply. On-chain deployment is a Phase 06 milestone. Learning responses and phase acceptance are pending.
+- The README exercise traces how a delegated transfer moves balances and consumes allowance while preserving total supply. On-chain deployment is a Phase 06 milestone.
+- The owner explicitly accepted Phase 05 on 2026-11-24. Learning responses remain pending.
 - Suggested commit message: `feat: add owner-mintable ERC-20 test token`.
+
+## Phase 06 — Local deployment (2026-11-24)
+
+- Approved by the owner. Added a Foundry deployment script, a PowerShell runner and verifier, and a public deployment record for chain 31337.
+- Ran the README deployment procedure on fresh Anvil instances at ports 18545 and 8545. Both broadcasts succeeded. Each run verified two distinct addresses, two successful receipts, nonempty runtime code, names, symbols, 18 decimals, the intended owner, and zero initial supplies.
+- The fresh nodes used the same default sender and deployment nonces, so both reproduced the same contract addresses. Their block hashes differed. The final JSON records the 8545 run.
+- Windows initially blocked RPC access across execution contexts. Running the node and helper together with loopback proxy bypass succeeded. Forge reported trace-source and signature-cache warnings. Build, format check, and all 11 existing tests passed.
+- Exercise: inspect the STK receipt and RWD symbol using the README commands. Compare the sender, created address, and gas used. Learning responses remain pending.
+- The owner explicitly accepted Phase 06 on 2026-11-24.
+- Suggested commit message: `feat: deploy and verify STK and RWD on local Anvil`.
+
+## Phase 07 — Local Cast exercise (2026-11-25)
+
+The prior node on port 8545 refused the RPC connection. Started fresh loopback Anvil and ran the Phase 06 deployment helper. Both creation receipts matched the recorded addresses and block hashes. Both contracts had runtime code, the expected symbols, and the local deployer as owner. The exercise used chain 31337 and Anvil accounts 0, 1, and 2 as owner, Alice, and Bob.
+
+| Step | Alice STK | Bob STK | Bob's allowance from Alice | STK supply | Successful transaction hash |
+| --- | ---: | ---: | ---: | ---: | --- |
+| Initial reads | 0 | 0 | 0 | 0 | — |
+| Owner mints to Alice | 10 | 0 | 0 | 10 | `0xca7d2b2257ea669ad9993c9f74a1f171d58f31feda9ac3bb013ca2e0783cd662` |
+| Alice transfers to Bob | 8 | 2 | 0 | 10 | `0x2089ab182170110dbffb48cd76aab57719c146830341877d8691e7e221392b32` |
+| Alice approves Bob | 8 | 2 | 3 | 10 | `0xa92f1efd37741e1c67725e0393431865543e67a0b1ab6a4e3dbc8498f933c374` |
+| Bob spends from Alice | 7 | 3 | 2 | 10 | `0x52c6bd1b71b046b21684c5eca46531770353fe95c7b10a4acbfe4a194529df64` |
+
+Read back all four quantities after every receipt. A final `cast call --from` simulated Bob spending 3 STK with only 2 approved. It reverted with selector `0xfb8f41b2` (insufficient allowance). The final readback again returned 7, 3, 2, and 10 STK. Deployment emitted nonfatal Forge trace warnings. The recorded hashes refer to this disposable local chain.
+
+The owner accepted Phase 07 on 2026-11-25. Learning responses remain pending. The README contains the PowerShell exercise. Suggested commit message: `docs: demonstrate STK transfers and allowance consumption with Cast`.
+
+## Phase 08 — Stake draft
+
+Implemented a React draft screen with TypeScript, Vite, plain CSS and exact npm pins. Input state preserves decimal text as typed and passes it to the preview component. The first build identified missing Node declarations for Vite. Added matching Node 22 development types and reran `npm run build` successfully on Node 22.17.1.
+
+Started Vite on loopback. Headless Edge verified typing 12.50, clearing to zero, two columns at 1280 px and one at 375 px, with no horizontal overflow. The exercise and startup commands are in README. The owner accepted Phase 08 on 2026-11-25. Learning review remains open.
+
+Suggested commit: `feat: preview a local STK stake draft in React`.
+
+## Phase 09 wallet integration checkpoint
+
+Installed the pinned wallet libraries and added connection controls for chain 31337. Strict application type checking and the production build passed with third-party declaration checking skipped due to dependency declaration conflicts. Edge showed the missing-wallet message and preserved the stake draft. The simulated wallet was not detected on the rejection test, so rejection, successful connection, account changes, network switching and disconnect remain unverified. Real extension testing and phase acceptance are pending.
 
 ## Future entry format
 

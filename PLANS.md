@@ -7,8 +7,12 @@
 - Phase 02: accepted by the owner; learning review pending.
 - Phase 03: accepted by the owner; learning review pending.
 - Phase 04: accepted by the owner; learning review pending.
-- Phase 05: ERC-20 test token compiled and tested; learning review and acceptance pending.
-- Phases 06-19: not started; implementation not authorized.
+- Phase 05: accepted by the owner. Learning review remains open.
+- Phase 06: accepted by the owner. Learning review remains open.
+- Phase 07: accepted by the owner. Learning review remains open.
+- Phase 08: accepted by the owner. Frontend build and browser checks passed.
+- Phase 09: wallet controls implemented. Browser verification in progress.
+- Phases 10-19: not started.
 - Learning understanding: not yet verified through the owner's answers.
 
 The owner explicitly requested Phase 01 planning and approved its implementation. This authorizes the present document work; it does not retroactively establish Phase 00 acceptance or authorize future phases.
@@ -28,11 +32,11 @@ Each phase depends on the preceding milestone. Do not silently skip or combine p
 | 02 | Inspect environment; verify compatible stable versions against official documentation; install only approved missing tools. | Project context documents | Tool inventory, version/compatibility decisions, installation approvals, and observed results recorded. | Accepted; learning review pending |
 | 03 | Initialize Git and Foundry; pin contract dependencies; explain structure. | Verified tools | Project compiles, dependencies are recorded, appropriate ignore rules prevent secrets/generated clutter entering Git. | Accepted; learning review pending |
 | 04 | Create a minimal temporary Solidity learning example. | Foundry project | Compile/test; explain state, functions, storage, callers, transactions; isolate/remove example from final deployable application. | Accepted; learning review pending |
-| 05 | Implement MockERC20 using OpenZeppelin. | Contract tooling and learning example | Tests cover metadata, balances, transfers, approvals, and owner-only mint authorization. | Tests passed; acceptance pending |
-| 06 | Start Anvil; reproducibly deploy STK and RWD. | Tested token | Deployment receipts, bytecode, chain ID, addresses, and repeatable script verified. | Not started |
-| 07 | Interact with tokens using Cast. | Local token deployment | Observe reads, transfers, approve, and allowance; explain callers and transaction effects. | Not started |
-| 08 | Initialize React, TypeScript, Vite, and plain CSS. | Local contract interaction milestone | Minimal frontend runs/builds; explain components, props, state, and events; introduce palette. | Not started |
-| 09 | Configure wagmi, viem, TanStack Query, and MetaMask. | Frontend scaffold | Connection, disconnection, account changes, network changes, and wrong-network behavior checked. | Not started |
+| 05 | Implement MockERC20 using OpenZeppelin. | Contract tooling and learning example | Tests cover metadata, balances, transfers, approvals, and owner-only mint authorization. | Accepted. Learning review open. |
+| 06 | Start Anvil; reproducibly deploy STK and RWD. | Tested token | Deployment receipts, bytecode, chain ID, addresses, and repeatable script verified. | Verified on two fresh chains and accepted. |
+| 07 | Interact with tokens using Cast. | Local token deployment | Four successful receipts, balances, supply, allowance, and above-allowance simulation verified. | Accepted |
+| 08 | Initialize React, TypeScript, Vite, and plain CSS. | Local contract interaction milestone | Minimal frontend runs/builds; explain components, props, state, and events; introduce palette. | Accepted |
+| 09 | Configure wagmi, viem, TanStack Query, and MetaMask. | Frontend scaffold | Connection, disconnection, account changes, network changes, and wrong-network behavior checked. | Browser verification pending |
 | 10 | Import public deployment addresses and ABIs; display balances. | Wallet integration and deployment artifacts | Correct chain/address/ABI and bigint formatting verified against contract reads. | Not started |
 | 11 | Demonstrate approval to an explicitly identified local test spender. | Token reads and wallet integration | Confirm allowance changes and signing/confirmation states; clearly distinguish approval from staking. | Not started |
 | 12 | Implement principal-only StakingPool, tests, and local deployment. | Token/allowance fundamentals | Deposit/withdraw accounting, zero amounts, insufficient allowance, invalid withdrawals, and authorization cases tested. | Not started |
@@ -96,7 +100,8 @@ Create exactly five root Markdown files. Keep each document's purpose separate, 
 - [x] Verify STK and RWD metadata and state isolation, owner-only minting, direct transfers, and delegated transfers within allowance.
 - [x] Verify Solidity build, all tests, format, and lint checks.
 - [x] Document the delegated transfer exercise.
-- [ ] Review learning responses and record the owner's acceptance.
+- [x] Record the owner's explicit Phase 05 acceptance.
+- [ ] Review learning responses when provided.
 
 ## Deferred decisions and concerns
 

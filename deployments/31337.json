@@ -1,0 +1,16 @@
+{
+  "chainId": 31337,
+  "owner": "0xf39fd6e51aad88f6f4ce6ab8827279cfffb92266",
+  "tokens": {
+    "STK": {
+      "address": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+      "transactionHash": "0x769601225f6388fce2a16d4185cc612486d416c29cb166eba4c697bfd251b160",
+      "blockHash": "0xedd9cb680d48938d89512bcec8f50a998097f72bb2655f3aea8dc25db8a11168"
+    },
+    "RWD": {
+      "address": "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+      "transactionHash": "0xec48722ff05f0c0d968df691ad2325ee7db92d89c695c5535e25f12e9ae3977b",
+      "blockHash": "0x9a9596c9d3a160852810cdbcb1dad894504cd8aaf098b26d5db49f8da1dbabf5"
+    }
+  }
+}
