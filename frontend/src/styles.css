@@ -26,3 +26,4 @@ header { flex-wrap: wrap; }
 .wallet { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-left: auto; font-size: .9rem; }
 .wallet [role="status"] { flex-basis: 100%; color: #e5d2ff; }
 @media (max-width: 650px) { .workspace { grid-template-columns: 1fr; } }
+.allowance { overflow-wrap: anywhere; margin-bottom: 1rem; }

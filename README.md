@@ -6,7 +6,7 @@ The planned application lets users connect MetaMask, approve and stake STK, with
 
 ## Current state
 
-The owner accepted Phase 08 after the React stake draft passed build and browser checks. The public [deployment record](deployments/31337.json) identifies the local Anvil token pair used in Phase 07.
+The dashboard displays the connected wallet's STK balance on Anvil. The public [deployment record](deployments/31337.json) identifies the latest local token pair. Phase 10 verification used a simulated wallet in Edge. Real MetaMask verification is still open.
 
 This project is educational, not production-ready or independently audited. Mainnet deployment is excluded.
 
@@ -25,6 +25,15 @@ npm run dev -- --host 127.0.0.1
 Open the URL Vite prints. Type `12.50` and click **Clear amount**. The input event updates React state and the preview receives the draft through its `amount` prop. Refreshing the page clears the draft. Run `npm run build` for the TypeScript check and production bundle.
 
 ## Start here
+
+**Balance exercise.** With Anvil running and the deployment record current, connect a local test account. Compare the dashboard with the PowerShell commands below. Change accounts and repeat. Use **Refresh** after a local transfer. After restarting an in-memory Anvil, rerun the local deployment helper and restart the frontend (rebuild if serving the production bundle).
+
+```powershell
+# From the repository root
+$stkRecord = Get-Content deployments/31337.json -Raw | ConvertFrom-Json
+$account = Read-Host 'Connected public wallet address'
+cast call $stkRecord.tokens.STK.address 'balanceOf(address)(uint256)' $account --rpc-url http://127.0.0.1:8545
+```
 
 | Document | Read it to understand |
 | --- | --- |
@@ -285,6 +294,22 @@ Check-State $final
 ```
 
 </details>
+
+## Phase 12 learning exercise
+
+Run `forge test --root contracts --match-test test_PartialAndFullWithdrawal -vvv` from the repository root. Trace Alice's 5 STK deposit, her 2 STK withdrawal, and her final 3 STK withdrawal through the assertions. Then open [StakingPool.sol](contracts/src/StakingPool.sol) and follow the per-user deposit, the total, and each token transfer.
+
+The [pool deployment record](deployments/31337-pool.json) is for the disposable node on port 8553. While it is running, read back the final state from the repository root in PowerShell.
+
+```powershell
+$d = Get-Content deployments/31337-pool.json -Raw | ConvertFrom-Json
+$accounts = cast rpc eth_accounts --rpc-url $d.rpcUrl | ConvertFrom-Json
+cast receipt $d.transactionHash --rpc-url $d.rpcUrl
+cast call $d.address 'deposits(address)(uint256)' $accounts[1] --rpc-url $d.rpcUrl
+cast call $d.address 'totalDeposits()(uint256)' --rpc-url $d.rpcUrl
+```
+
+The two deposit reads were both `3000000000000000000` base units, or 3 STK. A fresh in-memory node needs a fresh deployment and receipt verification.
 
 ## Read the current documents
 

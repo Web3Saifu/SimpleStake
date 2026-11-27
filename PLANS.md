@@ -11,11 +11,39 @@
 - Phase 06: accepted by the owner. Learning review remains open.
 - Phase 07: accepted by the owner. Learning review remains open.
 - Phase 08: accepted by the owner. Frontend build and browser checks passed.
-- Phase 09: wallet controls implemented. Browser verification in progress.
-- Phases 10-19: not started.
+- Phase 09: wallet controls implemented; production build reverified. Browser-extension verification remains pending.
+- Phase 10: implemented after owner approval to proceed with Phase 09 browser checks open. Local balance verification passed. Accepted by the owner on 2026-11-26. Learning review pending.
+- Phase 11 implementation restored at the owner's request. The frontend build passed. Learning review remains open.
+- Phase 12 implemented and verified on disposable Anvil. Accepted on 2026-11-27. Learning review pending.
+- Phases 13-19: not started.
 - Learning understanding: not yet verified through the owner's answers.
 
 The owner explicitly requested Phase 01 planning and approved its implementation. This authorizes the present document work; it does not retroactively establish Phase 00 acceptance or authorize future phases.
+
+## Phase 10 implementation plan
+
+Display the connected account's STK balance beside the stake draft. Reuse the existing wagmi client and local Anvil transport. MetaMask supplies the account address. The balance read requires no signature.
+
+1. Add a frontend token configuration that imports the STK address from `deployments/31337.json` and a typed ERC-20 read ABI. Check the ABI against the compiled MockERC20 interface. Validate the RPC chain ID, address, deployment receipt and block hash, deployed code, symbol and decimals before displaying a balance.
+2. Add a wallet balance component to `frontend/src/App.tsx`. Read `balanceOf(account)` through wagmi, keep the result as `bigint`, and format it with viem's `formatUnits`. Key reads by chain, token and account so switching accounts never shows the previous account's balance.
+3. Display distinct disconnected, wrong-network, loading, successful and unavailable states. A successful zero read displays 0 STK. A failed read offers a retry.
+4. Compare the UI against Cast on the same deployment for an empty account and a funded account with a fractional balance. Check one base unit, account and network changes, unavailable RPC and stale deployment metadata. Run the frontend production build and record the observed results in LEARNING_LOG.md.
+
+## Phase 11 implementation plan
+
+Add an STK allowance panel to App.tsx. Reuse the Phase 10 deployment checks in stk.ts. Configure the disposable Phase 07 Bob account as the fixed local spender and show its full address before signing. Verify the address against the local fixture. Show the connected owner's current allowance for this spender.
+
+Parse the requested STK amount into exact base units, reject invalid input, and allow zero for revocation. Require revocation before replacing a nonzero allowance with another nonzero value. On a verified local deployment, simulate approve(spender, amount), request the wallet signature, track the hash and receipt, then refresh allowance. Associate pending results with their original account and chain. Show a read retry if refresh fails after confirmation.
+
+Verify a finite approval and revocation against Cast, including unchanged wallet balances. Check invalid amounts, wrong network, rejection, revert and refresh failure. Run the frontend build and record observed results.
+
+## Phase 12 implementation plan
+
+Build a principal-only pool for the local STK token. In `contracts/src/StakingPool.sol`, bind the pool to one STK address at deployment. Expose `stake(amount)`, `withdraw(amount)`, per-user deposits, total deposits, and events. Reject zero amounts and withdrawals larger than the caller's deposit. Use SafeERC20, ReentrancyGuard, and checks-effects-interactions. Support standard STK and require pool holdings to cover recorded deposits, including when someone transfers extra STK directly to the pool.
+
+Add Foundry tests for partial and full withdrawals, separate user balances, insufficient allowance, zero amounts, over-withdrawals, and accounting after failed transfers. Deploy against verified STK on disposable Anvil using a dedicated script. Verify deployed bytecode and token binding, then exercise approve, stake, and withdraw with Cast. Keep the pool's public deployment details available for Phase 13.
+
+Start learning with the Cast exercise. Follow 5 STK from the test wallet into the pool, withdraw 2 STK, and compare the wallet balance, user deposit, and total deposits. Then trace the same flow through the two Solidity functions and their Foundry tests. Dashboard integration belongs to Phase 13 and reward accounting belongs to Phase 14.
 
 ## Workflow
 
@@ -36,10 +64,10 @@ Each phase depends on the preceding milestone. Do not silently skip or combine p
 | 06 | Start Anvil; reproducibly deploy STK and RWD. | Tested token | Deployment receipts, bytecode, chain ID, addresses, and repeatable script verified. | Verified on two fresh chains and accepted. |
 | 07 | Interact with tokens using Cast. | Local token deployment | Four successful receipts, balances, supply, allowance, and above-allowance simulation verified. | Accepted |
 | 08 | Initialize React, TypeScript, Vite, and plain CSS. | Local contract interaction milestone | Minimal frontend runs/builds; explain components, props, state, and events; introduce palette. | Accepted |
-| 09 | Configure wagmi, viem, TanStack Query, and MetaMask. | Frontend scaffold | Connection, disconnection, account changes, network changes, and wrong-network behavior checked. | Browser verification pending |
-| 10 | Import public deployment addresses and ABIs; display balances. | Wallet integration and deployment artifacts | Correct chain/address/ABI and bigint formatting verified against contract reads. | Not started |
-| 11 | Demonstrate approval to an explicitly identified local test spender. | Token reads and wallet integration | Confirm allowance changes and signing/confirmation states; clearly distinguish approval from staking. | Not started |
-| 12 | Implement principal-only StakingPool, tests, and local deployment. | Token/allowance fundamentals | Deposit/withdraw accounting, zero amounts, insufficient allowance, invalid withdrawals, and authorization cases tested. | Not started |
+| 09 | Configure wagmi, viem, TanStack Query, and MetaMask. | Frontend scaffold | Connection, disconnection, account changes, network changes, and wrong-network behavior checked. | Build verified; browser-extension verification pending |
+| 10 | Import public deployment addresses and ABIs; display balances. | Wallet integration and deployment artifacts | Correct chain/address/ABI and bigint formatting verified against contract reads. | Accepted. Verified on Anvil with a simulated wallet in Edge. |
+| 11 | Demonstrate approval to an explicitly identified local test spender. | Token reads and wallet integration | Confirm allowance changes and signing/confirmation states; clearly distinguish approval from staking. | Restored. Frontend build passed. |
+| 12 | Implement principal-only StakingPool, tests, and local deployment. | Token/allowance fundamentals | Deposit/withdraw accounting, zero amounts, insufficient allowance, invalid withdrawals, and authorization cases tested. | Verified and accepted. |
 | 13 | Integrate approval to the actual pool, stake, and withdrawal. | Principal-only pool and frontend | Complete local transaction lifecycle verified; displays refresh after successful receipts. | Not started |
 | 14 | Explain reward mathematics; implement pre-funded, one-time schedule and reward accounting; redeploy with fresh local state. | Verified principal-only flow | Time-based, multi-user, funding, zero-stake, rounding, repeated-claim, and schedule-boundary tests pass. | Not started |
 | 15 | Integrate earned rewards and claims. | Updated deployment and reward contract | Updated ABIs/addresses verified; earned display and claim behavior checked end to end. | Not started |

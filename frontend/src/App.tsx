@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import WalletControls from './WalletControls'
+import WalletBalance from './WalletBalance'
+import Allowance from './Allowance'
 
 function AmountPreview({ amount }: { amount: string }) {
   return (
@@ -21,6 +23,8 @@ export default function App() {
       <main>
         <h1>Stake draft</h1>
         <p className="intro">Enter an amount to preview your stake.</p>
+        <WalletBalance />
+        <Allowance />
         <div className="workspace">
           <section className="entry">
             <label htmlFor="amount">Stake amount</label>

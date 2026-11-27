@@ -1,0 +1,8 @@
+{
+  "chainId": 31337,
+  "rpcUrl": "http://127.0.0.1:8553",
+  "stakingToken": "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+  "address": "0x9fe46736679d2d9a65f0992f2272de9f3c7fa6e0",
+  "transactionHash": "0x568a399fcef5d3a655d5f0570dc654e2d2fb28698f461899285ba3b856ee1034",
+  "blockHash": "0x2e8122c358f4d6b32e8d66a927bfe65510115365bed540306aa95e0df616668d"
+}

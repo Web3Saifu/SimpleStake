@@ -132,8 +132,37 @@ Suggested commit: `feat: preview a local STK stake draft in React`.
 
 ## Phase 09 wallet integration checkpoint
 
-Installed the pinned wallet libraries and added connection controls for chain 31337. Strict application type checking and the production build passed with third-party declaration checking skipped due to dependency declaration conflicts. Edge showed the missing-wallet message and preserved the stake draft. The simulated wallet was not detected on the rejection test, so rejection, successful connection, account changes, network switching and disconnect remain unverified. Real extension testing and phase acceptance are pending.
+Installed the pinned wallet libraries and added connection controls for chain 31337. Strict application type checking and the production build passed again with third-party declaration checking skipped due to dependency declaration conflicts. Edge showed the missing-wallet message and preserved the stake draft. The simulated wallet was not detected on the rejection test, so rejection, successful connection, account changes, network switching and disconnect remain unverified. Real extension testing and phase acceptance are pending.
+
+## Phase 10 wallet balance
+
+On 2026-11-26 the owner approved Phase 10 and agreed to proceed with real MetaMask verification still open. Deployed the tokens on a fresh local Anvil and refreshed the public record. Compared three read signatures and output types in viem's ERC-20 ABI against the compiled MockERC20 ABI. All matched.
+
+Cast returned 0, 1250000000000000001 and 1 base units for three accounts. In headless Edge the production dashboard showed 0, 1.250000000000000001 and 0.000000000000000001 STK. A simulated wallet supplied account and chain changes. The disconnected and wrong-chain prompts appeared. Injecting a mismatched receipt block hash or refusing RPC requests showed the unavailable state. Retry recovered after each condition cleared. The frontend production build and type check passed with browser externalization and bundle-size warnings. The owner accepted Phase 10 on 2026-11-26. Learning responses are pending.
+
+Suggested commit: `feat: display verified local STK balances at full precision`.
+
+## Phase 11 allowance
+
+The owner approved implementation. The production build and type check passed with bundle-size and browser externalization warnings. Edge used a simulated wallet with a real local Anvil RPC. Cast confirmed Bob's allowance changed from zero to 1250000000000000000 base units and back to zero, with unchanged owner balance. Browser checks covered invalid input, rejection, revocation before replacement and hiding the form on a wrong network. An injected reverted receipt exercised the revert message. A failed allowance refresh preserved the confirmed status and a read retry recovered. The owner accepted Phase 11 on 2026-11-27. Real MetaMask testing and learning review remain open.
+
+Suggested commit: `feat: approve and revoke a local STK allowance`.
+
+The owner paused Phase 11 learning to focus on Phase 10, then requested the full Phase 11 implementation walkthrough. Learning responses are pending.
+
+The owner clarified that they wanted the Phase 11 implementation removed. Removed the allowance panel and restored the Phase 10 balance reader.
+
+The owner requested Phase 11 again. Restored the allowance panel and shared STK deployment checks. The TypeScript check and production build passed. The prior Anvil browser verification used a simulated wallet.
+
+## Phase 12 principal-only pool
+
+The owner approved the plan. The test-first compile failed because StakingPool.sol did not yet exist. After implementation, `forge test --root contracts` passed 18 tests, including seven pool tests, and `forge fmt --root contracts --check` passed.
+
+Deployed STK and the pool on disposable Anvil on port 8553. Verified the deployment receipt, runtime code, and staking token binding. Cast confirmed that approval left the wallet at 10 STK and the deposit at zero. Staking 5 left the wallet and deposit at 5 STK each. Withdrawing 2 left 7 in the wallet and 3 deposited. Pool holdings matched total deposits at each step. Forge printed nonfatal source-trace warnings. The public deployment record is specific to this Anvil instance. The owner accepted Phase 12 on 2026-11-27. Learning responses are pending.
+
+Suggested commit `feat: add and verify principal-only local staking pool`.
 
 ## Future entry format
+
 
 For each milestone record date, authorization, files/behavior changed, concepts introduced, decisions, actual commands/results/test counts, errors and solutions, remaining concerns, owner's own reflections, learning verification, and phase acceptance. Never fill unknown results with assumed success.
